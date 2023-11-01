@@ -1,5 +1,7 @@
 # Minimize
 
+[![CMake on multiple platforms](https://github.com/domohuhn/minimize/actions/workflows/cmake-multi-platform.yml/badge.svg)](https://github.com/domohuhn/minimize/actions/workflows/cmake-multi-platform.yml)
+
 A small C++ open source library that can be used to find minima of multi-dimensional functions.
 The main selling point of this library is that it has no external dependencies and a permissive license.
 
