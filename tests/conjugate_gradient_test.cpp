@@ -17,7 +17,7 @@ SCENARIO("Conjugate gradient descent: fit linear function", "[conjugate gradient
         LinearFunction linear{};
         MeasurementVector<1> vec{};
         for (size_t i = 0; i < 100; ++i) {
-            using in_t = std::array<minimize::floating_t, 1>;
+            using in_t = minimize::floating_t;
             using m_t = minimize::Measurement<1>;
             vec.emplace_back(m_t{in_t{0.25 * i}, 4.0 * i - 3.0});
         }
@@ -37,7 +37,7 @@ SCENARIO("Conjugate gradient descent: fit linear function", "[conjugate gradient
         LinearFunction linear{};
         MeasurementVector<1> vec{};
         for (size_t i = 0; i < 100; ++i) {
-            using in_t = std::array<minimize::floating_t, 1>;
+            using in_t = minimize::floating_t;
             using m_t = minimize::Measurement<1>;
             vec.emplace_back(m_t{in_t{0.25 * i}, 1.5 * i + 27.9 + 0.1 * (i % 3)});
         }
@@ -59,7 +59,7 @@ SCENARIO("Conjugate gradient descent: gaussian function", "[conjugate gradient]"
         Gaussian gauss{};
         MeasurementVector<1> vec{};
         for (size_t i = 0; i < 100; ++i) {
-            using in_t = std::array<minimize::floating_t, 1>;
+            using in_t = minimize::floating_t;
             using m_t = minimize::Measurement<1>;
             vec.emplace_back(m_t{in_t{0.25 * i}, compute_gaussian(0.25 * i)});
         }

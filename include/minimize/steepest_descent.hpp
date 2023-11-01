@@ -12,9 +12,9 @@
 namespace minimize {
 
 template <std::size_t InputDimensions, std::size_t NumberOfParameters, typename DataVector>
-typename Function<InputDimensions, NumberOfParameters>::parameter_t steepest_descent(
-    Function<InputDimensions, NumberOfParameters>& function, const DataVector& measurements,
-    minimize::floating_t tolerance, std::size_t max_iterations = 16535) {
+minimize::floating_t steepest_descent(Function<InputDimensions, NumberOfParameters>& function,
+                                      const DataVector& measurements, minimize::floating_t tolerance,
+                                      std::size_t max_iterations = 16535) {
     auto minimum = function.parameters();
     std::size_t iterations = 0;
 
@@ -35,7 +35,7 @@ typename Function<InputDimensions, NumberOfParameters>::parameter_t steepest_des
         ++iterations;
     } while (iterations < max_iterations && tolerance < rel_change);
 
-    return minimum;
+    return chi2;
 }
 
 }  // namespace minimize

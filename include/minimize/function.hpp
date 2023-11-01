@@ -9,9 +9,9 @@
 #include <cstdio>
 #include <string>
 
-namespace minimize {
+#include "minimize/detail/meta.hpp"
 
-using floating_t = double;
+namespace minimize {
 
 template <std::size_t NumberOfParameters>
 using parameter_t = std::array<floating_t, NumberOfParameters>;
@@ -20,7 +20,7 @@ template <std::size_t InputDimensions, std::size_t NumberOfParameters>
 class Function {
 public:
     using parameter_t = ::minimize::parameter_t<NumberOfParameters>;
-    using input_t = std::array<floating_t, InputDimensions>;
+    using input_t = typename ::minimize::detail::type_selection_helper<InputDimensions>::type;
     using output_t = floating_t;
     static constexpr std::size_t input_dimensions = InputDimensions;
     static constexpr std::size_t number_of_parameters = NumberOfParameters;
@@ -92,6 +92,29 @@ public:
 private:
     parameter_t parameters_{};
     floating_t epsilon_{1e-15};
+};
+
+/** Linear functions */
+template <std::size_t Degree>
+class Polynomial : public minimize::Function<1, Degree + 1> {
+public:
+    using base_t = typename minimize::Function<1, Degree + 1>::Function;
+    using base_t::Function;
+    using output_t = typename base_t::output_t;
+    using input_t = typename base_t::input_t;
+    using parameter_t = typename base_t::parameter_t;
+
+    virtual floating_t evaluate(const input_t& x, const parameter_t& parameters) const {
+        minimize::floating_t t = 1.0;
+        minimize::floating_t rv = parameters[0];
+        for (size_t i = 1; i <= Degree; ++i) {
+            t *= x;
+            rv += t * parameters[i];
+        }
+        return rv;
+    }
+
+    using base_t::evaluate;
 };
 
 }  // namespace minimize

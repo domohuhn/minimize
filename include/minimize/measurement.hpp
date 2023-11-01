@@ -7,21 +7,25 @@
 #include <array>
 #include <vector>
 
+#include "minimize/detail/meta.hpp"
+
 namespace minimize {
 
 /** Represents a measured data point. Used to fit the function parameters to match the measured values. */
 template <std::size_t InputDimensions>
 struct MeasurementWithError {
-    std::array<double, InputDimensions> in{};
-    double out{0.0};
-    double error{0.0};
+    using input_t = typename ::minimize::detail::type_selection_helper<InputDimensions>::type;
+    input_t in{};
+    floating_t out{0.0};
+    floating_t error{0.0};
 };
 
 /** Represents a measured data point. Used to fit the function parameters to match the measured values. */
 template <std::size_t InputDimensions>
 struct Measurement {
-    std::array<double, InputDimensions> in{};
-    double out{0.0};
+    using input_t = typename ::minimize::detail::type_selection_helper<InputDimensions>::type;
+    input_t in{};
+    floating_t out{0.0};
 };
 
 template <std::size_t InputDimensions>

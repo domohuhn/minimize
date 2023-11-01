@@ -12,7 +12,7 @@ public:
     LinearFunction() : minimize::Function<1, 2>({2.0, 42.0}) {}
 
     virtual output_t evaluate(const input_t& x, const parameter_t& parameters) const {
-        return parameters[0] * x[0] + parameters[1];
+        return parameters[0] * x + parameters[1];
     }
 
     using minimize::Function<1, 2>::evaluate;
@@ -23,7 +23,7 @@ public:
     Gaussian() : minimize::Function<1, 2>({-5, 2.0}) {}
 
     virtual output_t evaluate(const input_t& x, const parameter_t& parameters) const {
-        const auto arg = (x[0] - parameters[0]) / parameters[1];
+        const auto arg = (x - parameters[0]) / parameters[1];
         return 1.0 / (parameters[1] * std::sqrt(2 * 3.14159265358979323846264338327950288419716939937510)) *
                std::exp(-0.5 * arg * arg);
     }
