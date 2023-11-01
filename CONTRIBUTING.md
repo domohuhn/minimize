@@ -1,6 +1,7 @@
 ## Contribution workflow
 
-You can contribute to this repository using the github workflow:
+Contributions are welcome!
+You can contribute to this repository in the following way:
 
 - Create a new branch/fork and add your changes.
 - Make sure that all tests pass and that there are no conflicts with main.

@@ -1,8 +1,8 @@
 // Copyright (C) 2023 by domohuhn
 // SPDX-License-Identifier: Zlib
 
-#ifndef MINIMIZE_STEEPEST_DESCENT_INCLUDED_HPP
-#define MINIMIZE_STEEPEST_DESCENT_INCLUDED_HPP
+#ifndef MINIMIZE_CONJUGATE_GRADIENT_DESCENT_INCLUDED_HPP
+#define MINIMIZE_CONJUGATE_GRADIENT_DESCENT_INCLUDED_HPP
 
 #include "minimize/chi2.hpp"
 #include "minimize/find_minimum_on_line.hpp"
@@ -52,7 +52,7 @@ minimize::floating_t conjugate_gradient_descent_step(Function<InputDimensions, N
 
 template <std::size_t InputDimensions, std::size_t NumberOfParameters, typename DataVector>
 minimize::floating_t conjugate_gradient_descent(Function<InputDimensions, NumberOfParameters>& function,
-                                                const DataVector& measurements, minimize::floating_t tolerance,
+                                                const DataVector& measurements, minimize::floating_t tolerance = 1e-15,
                                                 std::size_t max_iterations = 16535) {
     std::size_t iterations = 0;
 
@@ -72,4 +72,4 @@ minimize::floating_t conjugate_gradient_descent(Function<InputDimensions, Number
 
 }  // namespace minimize
 
-#endif /* MINIMIZE_STEEPEST_DESCENT_INCLUDED_HPP */
+#endif /* MINIMIZE_CONJUGATE_GRADIENT_DESCENT_INCLUDED_HPP */

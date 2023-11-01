@@ -6,6 +6,7 @@ cmake_minimum_required(VERSION 3.14)
 project(minimize VERSION 1.0.0)
 
 option(MINIMIZE_BUILD_TESTS "Build the unit tests for the minimize library" OFF)
+option(MINIMIZE_BUILD_EXAMPLES "Build the examples for the minimize library" OFF)
 
 add_library(minimize INTERFACE)
 
@@ -14,6 +15,18 @@ target_include_directories(minimize INTERFACE
 )
 
 target_compile_features(minimize INTERFACE cxx_std_11)
+
+#
+# Examples
+#
+
+
+if(MINIMIZE_BUILD_EXAMPLES)
+  add_executable(minimize-linear-fit
+    examples/linear_fit.cpp
+  )
+  target_link_libraries(minimize-linear-fit PRIVATE minimize)
+endif()
 
 #
 # Tests

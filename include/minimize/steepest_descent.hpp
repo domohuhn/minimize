@@ -13,7 +13,7 @@ namespace minimize {
 
 template <std::size_t InputDimensions, std::size_t NumberOfParameters, typename DataVector>
 minimize::floating_t steepest_descent(Function<InputDimensions, NumberOfParameters>& function,
-                                      const DataVector& measurements, minimize::floating_t tolerance,
+                                      const DataVector& measurements, minimize::floating_t tolerance = 1e-15,
                                       std::size_t max_iterations = 16535) {
     auto minimum = function.parameters();
     std::size_t iterations = 0;
