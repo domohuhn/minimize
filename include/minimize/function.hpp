@@ -98,8 +98,8 @@ private:
 template <std::size_t Degree>
 class Polynomial : public minimize::Function<1, Degree + 1> {
 public:
-    using base_t = typename minimize::Function<1, Degree + 1>::Function;
-    using base_t::Function;
+    using base_t = typename minimize::Function<1, Degree + 1>;
+    using minimize::Function<1, Degree + 1>::Function;
     using output_t = typename base_t::output_t;
     using input_t = typename base_t::input_t;
     using parameter_t = typename base_t::parameter_t;
