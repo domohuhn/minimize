@@ -26,6 +26,11 @@ if(MINIMIZE_BUILD_EXAMPLES)
     examples/linear_fit.cpp
   )
   target_link_libraries(minimize-linear-fit PRIVATE minimize)
+  
+  add_executable(minimize-gaussian-fit
+    examples/gaussian_fit.cpp
+  )
+  target_link_libraries(minimize-gaussian-fit PRIVATE minimize)
 endif()
 
 #

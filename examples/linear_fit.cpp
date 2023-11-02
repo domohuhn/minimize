@@ -13,7 +13,7 @@
 
 static std::array<double, 2> expected_parameters{-3.0, 4.0};
 
-minimize::MeasurementVector<1> read_measurement_data() {
+minimize::MeasurementVector<1> read_measurement_data(bool verbose) {
     minimize::MeasurementVector<1> data{};
     using m_t = minimize::Measurement<1>;
     // we generate a set of fake measurement values.
@@ -21,19 +21,22 @@ minimize::MeasurementVector<1> read_measurement_data() {
     std::random_device rd{};
     std::mt19937 gen{rd()};
     std::normal_distribution<double> gauss{0.0, 1.0};
-    std::cout << "# Creating measurement data\n# x y\n";
+    if (verbose) std::cout << "# Creating measurement data\n# x y\n";
     for (size_t i = 0; i < 101; ++i) {
         const double x = i;
         const double y = expected_parameters[0] + expected_parameters[1] * x + gauss(gen);
-        std::cout << x << " " << y << "\n";
+        if (verbose) std::cout << x << " " << y << "\n";
         data.emplace_back(m_t{x, y});
     }
-    std::cout << "\n\n";
+    if (verbose) std::cout << "\n\n";
     return data;
 }
 
-int main() {
-    const auto data = read_measurement_data();
+int main(int argc, char**) {
+    if (argc <= 1) {
+        std::cout << "Pass any argument to see the generated data points\n";
+    }
+    const auto data = read_measurement_data(argc > 1);
     // create a polynomial of degree 1
     minimize::Polynomial<1> poly{};
     // set initial values

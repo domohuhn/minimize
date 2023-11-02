@@ -79,9 +79,13 @@ public:
                << " +- "
                << "error"
                << "\n";
+
+        const auto default_precision{stream.precision()};
         for (std::size_t i = 0; i < NumberOfParameters; ++i) {
             stream << std::setw(20) << parameter_names[i] << " | " << std::setw(20) << optimized_parameters_[i]
-                   << " +- " << optimized_parameter_errors_[i] << "\n";
+                   << " +- " << optimized_parameter_errors_[i] << " (" << std::setprecision(2)
+                   << std::abs(100.0 * optimized_parameter_errors_[i] / optimized_parameters_[i]) << " %)\n";
+            stream << std::setprecision(default_precision);
         }
         stream << "\n\n";
 

@@ -20,9 +20,12 @@ minimize::Polynomial<1> poly{};
 poly.set_parameter(0, 0.0);
 poly.set_parameter(1, 0.0);
 // fit
-const auto chi2 = minimize::conjugate_gradient_descent(poly,data);
+const auto results = minimize::conjugate_gradient_descent(poly,data);
 
 ```
+
+The examples folder contains more detailed snippets showing how to use the library.
+If you want to use a custom function, you must create a class that derives from minimize::Function.
 
 ## Dependencies
 
