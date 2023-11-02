@@ -32,6 +32,29 @@ std::array<minimize::floating_t, NumberOfParameters> axpy(
     return rv;
 }
 
+/** elementwise computation of (a-b)*(a-b) */
+template <std::size_t NumberOfParameters>
+std::array<minimize::floating_t, NumberOfParameters> elementwise_a_minus_b_squared(
+    const std::array<minimize::floating_t, NumberOfParameters>& a,
+    const std::array<minimize::floating_t, NumberOfParameters>& b) {
+    std::array<minimize::floating_t, NumberOfParameters> rv;
+    for (size_t i = 0; i < NumberOfParameters; ++i) {
+        rv[i] = (a[i] - b[i]) * (a[i] - b[i]);
+    }
+    return rv;
+}
+
+/** elementwise computation of sqrt */
+template <std::size_t NumberOfParameters>
+std::array<minimize::floating_t, NumberOfParameters> elementwise_sqrt(
+    const std::array<minimize::floating_t, NumberOfParameters>& a) {
+    std::array<minimize::floating_t, NumberOfParameters> rv;
+    for (size_t i = 0; i < NumberOfParameters; ++i) {
+        rv[i] = std::sqrt(a[i]);
+    }
+    return rv;
+}
+
 template <std::size_t NumberOfParameters>
 std::array<minimize::floating_t, NumberOfParameters> lerp(
     minimize::floating_t alpha, const std::array<minimize::floating_t, NumberOfParameters>& x,

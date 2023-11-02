@@ -40,21 +40,19 @@ int main() {
     poly.set_parameter(0, 0.0);
     poly.set_parameter(1, 0.0);
     // fit
-    const auto results = minimize::conjugate_gradient_descent(poly, data);
+    const auto results = minimize::bootstrap_errors<1, 2, minimize::MeasurementVector<1>>(
+        poly, data, minimize::conjugate_gradient_descent<1, 2, minimize::MeasurementVector<1>>);
 
     // print results
 
     std::cout << "# Fitting a linear function to measurement data with random noise.\n";
-    std::cout << "# Fit results:\n";
-    std::cout << "# wssr/NDF: " << results.normalized_weighted_sum_of_squared_residuals() << "\n\n";
+    std::cout << results.create_report();
     std::cout << "# parameters:\n";
     for (std::size_t i = 0; i < poly.number_of_parameters; ++i) {
         const auto diff = poly.parameter(i) - expected_parameters[i];
         std::cout << "# " << poly.parameter_name(i) << " : " << poly.parameter(i)
                   << "   (difference to real value: " << diff << ")\n";
     }
-
-    std::cout << results.create_report();
 
     return 0;
 }

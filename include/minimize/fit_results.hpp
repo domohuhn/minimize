@@ -42,9 +42,9 @@ public:
 
     const parameter_t& optimized_value_errors() const noexcept { return optimized_parameter_errors_; }
 
-    void set_optimized_parameters(const parameter_t& p) { optimized_parameters_ = p; }
+    void set_optimized_values(const parameter_t& p) { optimized_parameters_ = p; }
 
-    void set_optimized_parameter_errors(const parameter_t& p) { optimized_parameter_errors_ = p; }
+    void set_optimized_value_errors(const parameter_t& p) { optimized_parameter_errors_ = p; }
 
     void set_weighted_sum_of_squared_residuals(const floating_t& p) { weighted_sum_of_squared_residuals_ = p; }
 
@@ -73,9 +73,15 @@ public:
         stream << "WSSR/NDF     : " << normalized_weighted_sum_of_squared_residuals() << "\n";
         stream << "\n";
         stream << "Final set of parameters:\n";
+
+        stream << std::setw(20) << "name"
+               << " | " << std::setw(20) << "value"
+               << " +- "
+               << "error"
+               << "\n";
         for (std::size_t i = 0; i < NumberOfParameters; ++i) {
-            stream << std::setw(20) << parameter_names[i] << " : " << optimized_parameters_[i] << " +- "
-                   << optimized_parameter_errors_[i] << "\n";
+            stream << std::setw(20) << parameter_names[i] << " | " << std::setw(20) << optimized_parameters_[i]
+                   << " +- " << optimized_parameter_errors_[i] << "\n";
         }
         stream << "\n\n";
 

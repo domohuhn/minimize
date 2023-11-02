@@ -6,6 +6,7 @@
 
 // Primary include file for minimize
 
+#include "minimize/bootstrap.hpp"
 #include "minimize/conjugate_gradient_descent.hpp"
 #include "minimize/function.hpp"
 #include "minimize/measurement.hpp"

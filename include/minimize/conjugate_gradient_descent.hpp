@@ -75,7 +75,7 @@ minimize::FitResults<NumberOfParameters> conjugate_gradient_descent(
     results.set_converged(iterations < max_iterations);
     results.set_iterations(iterations);
     results.set_weighted_sum_of_squared_residuals(wssr);
-    results.set_optimized_parameters(minimum);
+    results.set_optimized_values(minimum);
     return results;
 }
 
