@@ -40,8 +40,7 @@ int main() {
     poly.set_parameter(0, 0.0);
     poly.set_parameter(1, 0.0);
     // fit
-    const auto results = minimize::bootstrap_errors<1, 2, minimize::MeasurementVector<1>>(
-        poly, data, minimize::conjugate_gradient_descent<1, 2, minimize::MeasurementVector<1>>);
+    const auto results = minimize::conjugate_gradient_descent(poly, data);
 
     // print results
 

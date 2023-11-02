@@ -23,10 +23,10 @@ SCENARIO("Steepest descent: fit linear function", "[steepest descent]") {
         }
 
         WHEN("the minimum is searched") {
-            const auto chi2 = steepest_descent(linear, vec, 1.0e-15);
-            const auto found = linear.parameters();
+            const auto results = steepest_descent(linear, vec, 1.0e-15);
+            const auto found = results.optimized_values();
             THEN("a minimum is found") {
-                REQUIRE_THAT(chi2, Catch::Matchers::WithinAbs(0.0, 1e-18));
+                REQUIRE_THAT(results.weighted_sum_of_squared_residuals(), Catch::Matchers::WithinAbs(0.0, 1e-18));
                 REQUIRE_THAT(found[0], Catch::Matchers::WithinRel(16.0, 1e-14));
                 REQUIRE_THAT(found[1], Catch::Matchers::WithinRel(-3.0, 1e-12));
             }
@@ -43,12 +43,12 @@ SCENARIO("Steepest descent: fit linear function", "[steepest descent]") {
         }
 
         WHEN("the minimum is searched") {
-            const auto chi2 = steepest_descent(linear, vec, 1.0e-15);
-            const auto found = linear.parameters();
+            const auto results = steepest_descent(linear, vec, 1.0e-15);
+            const auto found = results.optimized_values();
             THEN("a minimum is found") {
                 REQUIRE_THAT(found[0], Catch::Matchers::WithinRel(6.0, 1e-4));
                 REQUIRE_THAT(found[1], Catch::Matchers::WithinRel(28.0, 1e-4));
-                REQUIRE_THAT(chi2, Catch::Matchers::WithinAbs(0.67, 1e-2));
+                REQUIRE_THAT(results.weighted_sum_of_squared_residuals(), Catch::Matchers::WithinAbs(0.67, 1e-2));
             }
         }
     }
@@ -66,12 +66,12 @@ SCENARIO("Steepest descent: gaussian function", "[steepest descent]") {
         gauss.set_parameters(::minimize::parameter_t<2>{0.0, 1.0});
 
         WHEN("the minimum is searched") {
-            const auto chi2 = steepest_descent(gauss, vec, 1.0e-15);
-            const auto found = gauss.parameters();
+            const auto results = steepest_descent(gauss, vec, 1.0e-15);
+            const auto found = results.optimized_values();
             THEN("a minimum is found") {
                 REQUIRE_THAT(found[0], Catch::Matchers::WithinRel(14.0, 1e-8));
                 REQUIRE_THAT(found[1], Catch::Matchers::WithinRel(2.5, 1e-8));
-                REQUIRE_THAT(chi2, Catch::Matchers::WithinAbs(0.0, 1e-8));
+                REQUIRE_THAT(results.weighted_sum_of_squared_residuals(), Catch::Matchers::WithinAbs(0.0, 1e-8));
             }
         }
     }
@@ -84,11 +84,11 @@ SCENARIO("Steepest descent: fit saddle function", "[steepest descent]") {
         MeasurementVector<2> vec = create_perfect_test_data_saddle();
 
         WHEN("the minimum is searched") {
-            const auto chi2 = steepest_descent(saddle, vec, 1.0e-9);
+            const auto results = steepest_descent(saddle, vec, 1.0e-9);
             THEN("a minimum is found") {
                 // there are infinitely many solutions
-                // => check that chi2 converged.
-                REQUIRE_THAT(chi2, Catch::Matchers::WithinAbs(0.0, 1e-18));
+                // => check that results converged.
+                REQUIRE_THAT(results.weighted_sum_of_squared_residuals(), Catch::Matchers::WithinAbs(0.0, 1e-18));
             }
         }
     }

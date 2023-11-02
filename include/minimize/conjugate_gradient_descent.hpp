@@ -4,6 +4,7 @@
 #ifndef MINIMIZE_CONJUGATE_GRADIENT_DESCENT_INCLUDED_HPP
 #define MINIMIZE_CONJUGATE_GRADIENT_DESCENT_INCLUDED_HPP
 
+#include "minimize/bootstrap.hpp"
 #include "minimize/find_minimum_on_line.hpp"
 #include "minimize/fit_results.hpp"
 #include "minimize/function.hpp"
@@ -50,10 +51,8 @@ minimize::floating_t conjugate_gradient_descent_step(const Function<InputDimensi
     return wssr;
 }
 
-}  // namespace detail
-
 template <std::size_t InputDimensions, std::size_t NumberOfParameters, typename DataVector>
-minimize::FitResults<NumberOfParameters> conjugate_gradient_descent(
+minimize::FitResults<NumberOfParameters> conjugate_gradient_descent_impl(
     const Function<InputDimensions, NumberOfParameters>& function, const DataVector& measurements,
     minimize::floating_t tolerance = 1e-15, std::size_t max_iterations = 16535) {
     std::size_t iterations = 0;
@@ -77,6 +76,18 @@ minimize::FitResults<NumberOfParameters> conjugate_gradient_descent(
     results.set_weighted_sum_of_squared_residuals(wssr);
     results.set_optimized_values(minimum);
     return results;
+}
+
+}  // namespace detail
+
+template <std::size_t InputDimensions, std::size_t NumberOfParameters, typename DataVector>
+minimize::FitResults<NumberOfParameters> conjugate_gradient_descent(
+    Function<InputDimensions, NumberOfParameters>& function, const DataVector& measurements,
+    minimize::floating_t tolerance = 1e-15, std::size_t max_iterations = 16535) {
+    return minimize::bootstrap_errors<InputDimensions, NumberOfParameters, DataVector>(
+        function, measurements,
+        minimize::detail::conjugate_gradient_descent_impl<InputDimensions, NumberOfParameters, DataVector>, tolerance,
+        max_iterations);
 }
 
 }  // namespace minimize

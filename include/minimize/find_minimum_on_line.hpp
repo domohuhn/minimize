@@ -94,7 +94,6 @@ parameter_t<NumberOfParameters> binary_search_minimum_in_interval(
     std::size_t iterations = 0;
     minimize::floating_t lower_wssr = compute_wssr(fun, vec, lower);
     minimize::floating_t upper_wssr = compute_wssr(fun, vec, upper);
-    minimize::floating_t rel_change = 0.0;
 
     do {
         parameter_t<NumberOfParameters> mid = detail::lerp(0.5, lower, upper);

@@ -54,6 +54,9 @@ if(BUILD_TESTING)
       tests/polynomial_test.cpp
       tests/bootstrap_test.cpp
     )
+    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+      target_compile_options(test-minimize PRIVATE -Wall -Wextra -pedantic -Werror)
+    endif()
     target_link_libraries(test-minimize PRIVATE Catch2::Catch2WithMain minimize)
     catch_discover_tests(test-minimize)
   endif()
