@@ -6,15 +6,11 @@
 
 #include <array>
 #include <cmath>
-#include <cstdio>
 #include <string>
 
 #include "minimize/detail/meta.hpp"
 
 namespace minimize {
-
-template <std::size_t NumberOfParameters>
-using parameter_t = std::array<floating_t, NumberOfParameters>;
 
 template <std::size_t InputDimensions, std::size_t NumberOfParameters>
 class Function {

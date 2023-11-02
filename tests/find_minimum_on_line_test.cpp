@@ -74,7 +74,7 @@ SCENARIO("Minimum along a gradient can be found", "[line search]") {
         }
 
         WHEN("the minimum is searched") {
-            auto found = find_minimum_on_line(saddle, vec, direction, 200);
+            auto found = find_minimum_on_line(saddle, saddle.parameters(), vec, direction, 200);
             THEN("the real minimum is found") {
                 REQUIRE(found[0] == Approx(0.5));
                 REQUIRE(found[1] == Approx(1.0));
@@ -119,7 +119,7 @@ SCENARIO("Minimum along a gradient can be found", "[line search]") {
         }
 
         WHEN("the minimum is searched") {
-            auto found = find_minimum_on_line(saddle, vec, direction, 100);
+            auto found = find_minimum_on_line(saddle, saddle.parameters(), vec, direction, 100);
             THEN("the real minimum is found") {
                 REQUIRE_THAT(found[0], Catch::Matchers::WithinRel(0.5, 0.0001));
                 REQUIRE_THAT(found[1], Catch::Matchers::WithinRel(1.0, 0.0001));

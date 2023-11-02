@@ -31,24 +31,24 @@ SCENARIO("Steepest descent: fit linear function", "[steepest descent]") {
                 REQUIRE_THAT(found[1], Catch::Matchers::WithinRel(-3.0, 1e-12));
             }
         }
+    }
 
-        GIVEN("Noisy measurement data") {
-            LinearFunction linear{};
-            MeasurementVector<1> vec{};
-            for (size_t i = 0; i < 100; ++i) {
-                using in_t = minimize::floating_t;
-                using m_t = minimize::Measurement<1>;
-                vec.emplace_back(m_t{in_t{0.25 * i}, 1.5 * i + 27.9 + 0.1 * (i % 3)});
-            }
+    GIVEN("Noisy measurement data") {
+        LinearFunction linear{};
+        MeasurementVector<1> vec{};
+        for (size_t i = 0; i < 100; ++i) {
+            using in_t = minimize::floating_t;
+            using m_t = minimize::Measurement<1>;
+            vec.emplace_back(m_t{in_t{0.25 * i}, 1.5 * i + 27.9 + 0.1 * (i % 3)});
+        }
 
-            WHEN("the minimum is searched") {
-                const auto chi2 = steepest_descent(linear, vec, 1.0e-15);
-                const auto found = linear.parameters();
-                THEN("a minimum is found") {
-                    REQUIRE_THAT(found[0], Catch::Matchers::WithinRel(6.0, 1e-4));
-                    REQUIRE_THAT(found[1], Catch::Matchers::WithinRel(28.0, 1e-4));
-                    REQUIRE_THAT(chi2, Catch::Matchers::WithinAbs(0.67, 1e-2));
-                }
+        WHEN("the minimum is searched") {
+            const auto chi2 = steepest_descent(linear, vec, 1.0e-15);
+            const auto found = linear.parameters();
+            THEN("a minimum is found") {
+                REQUIRE_THAT(found[0], Catch::Matchers::WithinRel(6.0, 1e-4));
+                REQUIRE_THAT(found[1], Catch::Matchers::WithinRel(28.0, 1e-4));
+                REQUIRE_THAT(chi2, Catch::Matchers::WithinAbs(0.67, 1e-2));
             }
         }
     }

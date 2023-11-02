@@ -4,10 +4,11 @@
 #ifndef MINIMIZE_CONJUGATE_GRADIENT_DESCENT_INCLUDED_HPP
 #define MINIMIZE_CONJUGATE_GRADIENT_DESCENT_INCLUDED_HPP
 
-#include "minimize/chi2.hpp"
 #include "minimize/find_minimum_on_line.hpp"
+#include "minimize/fit_results.hpp"
 #include "minimize/function.hpp"
 #include "minimize/measurement.hpp"
+#include "minimize/wssr.hpp"
 
 namespace minimize {
 
@@ -26,48 +27,56 @@ minimize::floating_t compute_gamma(const minimize::parameter_t<NumberOfParameter
 }
 
 template <std::size_t InputDimensions, std::size_t NumberOfParameters, typename DataVector>
-minimize::floating_t conjugate_gradient_descent_step(Function<InputDimensions, NumberOfParameters>& function,
+minimize::floating_t conjugate_gradient_descent_step(const Function<InputDimensions, NumberOfParameters>& function,
+                                                     minimize::parameter_t<NumberOfParameters>& minimum,
                                                      const DataVector& measurements) {
-    auto chi2 = compute_chi2(function, measurements);
-    auto gi = compute_chi2_gradient(function, measurements);
+    auto wssr = compute_wssr(function, measurements, minimum);
+    auto gi = compute_wssr_gradient(function, measurements, minimum);
     auto conjugate_gradient = gi;
     for (size_t i = 0; i < NumberOfParameters; ++i) {
-        const auto next_parameters = find_minimum_on_line(function, measurements, conjugate_gradient, 128);
-        const auto next_chi2 = compute_chi2(function, measurements, next_parameters);
-        if (next_chi2 >= chi2) {
+        const auto next_parameters = find_minimum_on_line(function, minimum, measurements, conjugate_gradient, 128);
+        const auto next_wssr = compute_wssr(function, measurements, next_parameters);
+        if (next_wssr >= wssr) {
             break;
         }
-        chi2 = next_chi2;
-        function.set_parameters(next_parameters);
-        auto gi_plus1 = compute_chi2_gradient(function, measurements);
+        wssr = next_wssr;
+        minimum = next_parameters;
+        const auto gi_plus1 = compute_wssr_gradient(function, measurements, minimum);
         const auto gamma = compute_gamma(gi, gi_plus1);
         gi = gi_plus1;
         conjugate_gradient = detail::axpy(gamma, conjugate_gradient, gi_plus1);
     }
 
-    return chi2;
+    return wssr;
 }
 
 }  // namespace detail
 
 template <std::size_t InputDimensions, std::size_t NumberOfParameters, typename DataVector>
-minimize::floating_t conjugate_gradient_descent(Function<InputDimensions, NumberOfParameters>& function,
-                                                const DataVector& measurements, minimize::floating_t tolerance = 1e-15,
-                                                std::size_t max_iterations = 16535) {
+minimize::FitResults<NumberOfParameters> conjugate_gradient_descent(
+    const Function<InputDimensions, NumberOfParameters>& function, const DataVector& measurements,
+    minimize::floating_t tolerance = 1e-15, std::size_t max_iterations = 16535) {
     std::size_t iterations = 0;
 
-    auto chi2 = compute_chi2(function, measurements);
+    auto wssr = compute_wssr(function, measurements);
+    minimize::FitResults<NumberOfParameters> results(wssr, measurements.size());
+    results.initialize_before_fit(function);
+    auto minimum = function.parameters();
     minimize::floating_t rel_change;
     do {
-        const auto next_chi2 = detail::conjugate_gradient_descent_step(function, measurements);
-        if (next_chi2 >= chi2 || chi2 == 0.0) {
+        const auto next_wssr = detail::conjugate_gradient_descent_step(function, minimum, measurements);
+        if (next_wssr >= wssr || wssr == 0.0) {
             break;
         }
-        rel_change = 1.0 - next_chi2 / chi2;
-        chi2 = next_chi2;
+        rel_change = 1.0 - next_wssr / wssr;
+        wssr = next_wssr;
         ++iterations;
     } while (iterations < max_iterations && tolerance < rel_change);
-    return chi2;
+    results.set_converged(iterations < max_iterations);
+    results.set_iterations(iterations);
+    results.set_weighted_sum_of_squared_residuals(wssr);
+    results.set_optimized_parameters(minimum);
+    return results;
 }
 
 }  // namespace minimize

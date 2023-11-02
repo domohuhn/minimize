@@ -4,10 +4,10 @@
 #ifndef MINIMIZE_STEEPEST_DESCENT_INCLUDED_HPP
 #define MINIMIZE_STEEPEST_DESCENT_INCLUDED_HPP
 
-#include "minimize/chi2.hpp"
 #include "minimize/find_minimum_on_line.hpp"
 #include "minimize/function.hpp"
 #include "minimize/measurement.hpp"
+#include "minimize/wssr.hpp"
 
 namespace minimize {
 
@@ -18,24 +18,24 @@ minimize::floating_t steepest_descent(Function<InputDimensions, NumberOfParamete
     auto minimum = function.parameters();
     std::size_t iterations = 0;
 
-    auto chi2 = compute_chi2(function, measurements);
+    auto wssr = compute_wssr(function, measurements);
     auto rel_change = 10.0 * tolerance;
     do {
-        auto gradient = compute_chi2_gradient(function, measurements);
-        const auto next_parameters = find_minimum_on_line(function, measurements, gradient, 128);
-        const auto next_chi2 = compute_chi2(function, measurements, next_parameters);
-        if (next_chi2 >= chi2) {
+        auto gradient = compute_wssr_gradient(function, measurements, minimum);
+        const auto next_parameters = find_minimum_on_line(function, minimum, measurements, gradient, 128);
+        const auto next_wssr = compute_wssr(function, measurements, next_parameters);
+        if (next_wssr >= wssr || wssr == 0.0) {
             break;
         }
         minimum = next_parameters;
-        rel_change = 1.0 - next_chi2 / chi2;
-        chi2 = next_chi2;
-        function.set_parameters(next_parameters);
+        rel_change = 1.0 - next_wssr / wssr;
+        wssr = next_wssr;
 
         ++iterations;
     } while (iterations < max_iterations && tolerance < rel_change);
 
-    return chi2;
+    function.set_parameters(minimum);
+    return wssr;
 }
 
 }  // namespace minimize

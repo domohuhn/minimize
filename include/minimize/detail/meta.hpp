@@ -11,6 +11,9 @@ namespace minimize {
 
 using floating_t = double;
 
+template <std::size_t NumberOfParameters>
+using parameter_t = std::array<floating_t, NumberOfParameters>;
+
 namespace detail {
 
 template <std::size_t NumberOfParameters>

@@ -46,12 +46,13 @@ if(BUILD_TESTING)
     include(Catch)
 
     add_executable(test-minimize
-      tests/chi2_test.cpp
+      tests/wssr_test.cpp
       tests/function_gradient_test.cpp
       tests/find_minimum_on_line_test.cpp
       tests/steepest_descent_test.cpp
       tests/conjugate_gradient_test.cpp
       tests/polynomial_test.cpp
+      tests/bootstrap_test.cpp
     )
     target_link_libraries(test-minimize PRIVATE Catch2::Catch2WithMain minimize)
     catch_discover_tests(test-minimize)
